@@ -90,6 +90,8 @@ class Main extends egret.DisplayObjectContainer {
      * 创建游戏场景
      * Create a game scene
      */
+
+    
     private createGameScene():void {
 
         var tilemap = new TileMap();
@@ -111,6 +113,8 @@ class Main extends egret.DisplayObjectContainer {
 
 
 }
+
+
 
 
 
