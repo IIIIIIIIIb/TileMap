@@ -141,8 +141,7 @@ class Tile extends egret.DisplayObjectContainer{
 class Player extends egret.DisplayObjectContainer {
     public static PlayerSpeed = 2;
     public Polepic: egret.Bitmap;
-    private MySta: StateMachine = new StateMachine;
-    public MoveSpeed: number = 20;
+    private statemachine: StateMachine = new StateMachine;
     public Modle: number = 0;
     public IdleAnime: Array<egret.Texture> = new Array<egret.Texture>();
     public MoveAnime: Array<egret.Texture> = new Array<egret.Texture>();
@@ -232,14 +231,14 @@ class Player extends egret.DisplayObjectContainer {
     public Move() {
 
         var MS: Move = new Move(this);
-        this.MySta.Reload(MS);
+        this.statemachine.Reload(MS);
 
     }
 
     public Idle() {
 
         var IS: Idle = new Idle(this);
-        this.MySta.Reload(IS);
+        this.statemachine.Reload(IS);
 
 
     }
@@ -251,11 +250,12 @@ class Idle implements State {
         this.Player = Player;
     }
     Load() {
+        this.Player.Modle = 0;
         this.Player.PlayAnimation(this.Player.IdleAnime);
 
     }
     exit() {
-        this.Player.Modle++;
+       
     }
 
 }
@@ -271,12 +271,11 @@ class Move implements State {
     }
 
      Load() {
-        
+        this.Player.Modle++;
         this.Player.PlayAnimation(this.Player.MoveAnime);
 
     }
     exit() {
-        this.Player.Modle++;
     }
 
 }
@@ -336,11 +335,8 @@ class TileMap extends egret.DisplayObjectContainer{
         this.addChild(player);
         //站立
         player.Idle();
-        var move = false;
-
         var playerTween;
-        var time: number = 0;
-        this.timer = new egret.Timer(50, time);
+        //this.timer = new egret.Timer(50, time);
 
         this.touchEnabled = true;
         this.addEventListener(egret.TouchEvent.TOUCH_TAP,function(e: egret.TouchEvent){
@@ -372,17 +368,15 @@ class TileMap extends egret.DisplayObjectContainer{
                 var distance = 0; 
                 for(var i = 0; i < path.length; i++)
                     {
-                        move =true;
                         pathX = path[i].x * TileMap.TileSize;
                         pathY = path[i].y * TileMap.TileSize
                         playerX = gridX;
                         playerY = gridY;
                         distance = path.length*TileMap.TileSize;
                         console.log("distance:",distance);
-                        time = distance / Player.PlayerSpeed;
+                        //time = distance / Player.PlayerSpeed;
                         console.log("start");
                         //this.timer.start();
-                        
                         playerTween.to({x : pathX, y: pathY}, distance/Player.PlayerSpeed, egret.Ease.sineIn).call(function()
                         { 
                             console.log("time",distance/Player.PlayerSpeed);
